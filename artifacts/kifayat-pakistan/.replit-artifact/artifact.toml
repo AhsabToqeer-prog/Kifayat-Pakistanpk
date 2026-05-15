@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Kifayat Pakistan"
+version = "1.0.0"
+id = "artifacts/kifayat-pakistan"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24606
+
+[services.development]
+run = "pnpm --filter @workspace/kifayat-pakistan run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/kifayat-pakistan", "run", "build" ]
+publicDir = "artifacts/kifayat-pakistan/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24606"
+BASE_PATH = "/"
