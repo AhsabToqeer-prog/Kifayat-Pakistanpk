@@ -1,6 +1,4 @@
 import { pgTable, text, serial } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
 
 export const resourcesTable = pgTable("resources", {
   id: serial("id").primaryKey(),
@@ -12,6 +10,5 @@ export const resourcesTable = pgTable("resources", {
   phoneNumber: text("phone_number"),
 });
 
-export const insertResourceSchema = createInsertSchema(resourcesTable).omit({ id: true });
-export type InsertResource = z.infer<typeof insertResourceSchema>;
+
 export type Resource = typeof resourcesTable.$inferSelect;
