@@ -1,10 +1,10 @@
-import { Router, type IRouter, type Request, type Response } from "express";
+import { Router, type IRouter } from "express";
 import { eq } from "drizzle-orm";
 import { db, resourcesTable } from "@workspace/db";
 
 const router: IRouter = Router();
 
-router.get("/resources", async (req: Request, res: Response): Promise<void> => {
+router.get("/resources", async (req, res): Promise<void> => {
   const category = req.query.category as string | undefined;
 
   const results = category
