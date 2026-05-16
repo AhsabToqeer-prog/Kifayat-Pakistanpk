@@ -1,12 +1,11 @@
 {
-  "outputDirectory": "dist",
   "builds": [
     {
-      "src": "dist/index.mjs",
+      "src": "api/index.ts",
       "use": "@vercel/node"
     }
   ],
   "rewrites": [
-    { "source": "/(.*)", "destination": "/dist/index.mjs" }
+    { "source": "/(.*)", "destination": "/api/index.ts" }
   ]
 }
