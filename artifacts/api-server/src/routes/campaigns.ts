@@ -1,9 +1,9 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request, type Response } from "express";
 import { db, campaignsTable } from "@workspace/db";
 
 const router: IRouter = Router();
 
-router.get("/campaigns", async (_req, res): Promise<void> => {
+router.get("/campaigns", async (_req: Request, res: Response): Promise<void> => {
   const campaigns = await db.select().from(campaignsTable);
   res.json(
     campaigns.map((c) => ({

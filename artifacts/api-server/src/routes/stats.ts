@@ -1,22 +1,28 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request, type Response } from "express";
 import { eq, count, sum } from "drizzle-orm";
 import { db, contactsTable, campaignsTable, resourcesTable } from "@workspace/db";
 
 const router: IRouter = Router();
 
-router.get("/stats", async (_req, res): Promise<void> => {
-  const [totalContactsResult, newContactsResult, activeCampaignsResult, totalBeneficiariesResult, resourceCountResult, contactsByTypeResult] =
-    await Promise.all([
-      db.select({ count: count() }).from(contactsTable),
-      db.select({ count: count() }).from(contactsTable).where(eq(contactsTable.status, "new")),
-      db.select({ count: count() }).from(campaignsTable).where(eq(campaignsTable.status, "active")),
-      db.select({ total: sum(campaignsTable.beneficiaryCount) }).from(campaignsTable),
-      db.select({ count: count() }).from(resourcesTable),
-      db
-        .select({ inquiryType: contactsTable.inquiryType, count: count() })
-        .from(contactsTable)
-        .groupBy(contactsTable.inquiryType),
-    ]);
+router.get("/stats", async (_req: Request, res: Response): Promise<void> => {
+  const [
+    totalContactsResult,
+    newContactsResult,
+    activeCampaignsResult,
+    totalBeneficiariesResult,
+    resourceCountResult,
+    contactsByTypeResult,
+  ] = await Promise.all([
+    db.select({ count: count() }).from(contactsTable),
+    db.select({ count: count() }).from(contactsTable).where(eq(contactsTable.status, "new")),
+    db.select({ count: count() }).from(campaignsTable).where(eq(campaignsTable.status, "active")),
+    db.select({ total: sum(campaignsTable.beneficiaryCount) }).from(campaignsTable),
+    db.select({ count: count() }).from(resourcesTable),
+    db
+      .select({ inquiryType: contactsTable.inquiryType, count: count() })
+      .from(contactsTable)
+      .groupBy(contactsTable.inquiryType),
+  ]);
 
   res.json({
     totalContacts: totalContactsResult[0]?.count ?? 0,
