@@ -1,6 +1,7 @@
-import { Router, type IRouter } from "express";
-import { eq, desc, count, sql } from "drizzle-orm";
+import { Router, type IRouter, type Request, type Response } from "express";
+import { eq, desc, count } from "drizzle-orm";
 import { db, contactsTable } from "@workspace/db";
+import { logger } from "../lib/logger";
 import {
   SubmitContactBody,
   ListContactsQueryParams,
@@ -11,7 +12,7 @@ import {
 
 const router: IRouter = Router();
 
-router.post("/contact", async (req, res): Promise<void> => {
+router.post("/contact", async (req: Request, res: Response): Promise<void> => {
   const parsed = SubmitContactBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -33,7 +34,7 @@ router.post("/contact", async (req, res): Promise<void> => {
     })
     .returning();
 
-  req.log.info({ id: submission.id }, "Contact form submitted");
+  logger.info({ id: submission.id }, "Contact form submitted");
   res.status(201).json({
     id: submission.id,
     name: submission.name,
@@ -47,7 +48,7 @@ router.post("/contact", async (req, res): Promise<void> => {
   });
 });
 
-router.get("/admin/contacts", async (req, res): Promise<void> => {
+router.get("/admin/contacts", async (req: Request, res: Response): Promise<void> => {
   const queryParsed = ListContactsQueryParams.safeParse(req.query);
   const page = queryParsed.success ? (queryParsed.data.page ?? 1) : 1;
   const limit = queryParsed.success ? (queryParsed.data.limit ?? 20) : 20;
@@ -76,7 +77,7 @@ router.get("/admin/contacts", async (req, res): Promise<void> => {
   });
 });
 
-router.get("/admin/contacts/:id", async (req, res): Promise<void> => {
+router.get("/admin/contacts/:id", async (req: Request, res: Response): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const params = GetContactParams.safeParse({ id: parseInt(raw, 10) });
   if (!params.success) {
@@ -97,7 +98,7 @@ router.get("/admin/contacts/:id", async (req, res): Promise<void> => {
   res.json({ ...contact, createdAt: contact.createdAt.toISOString() });
 });
 
-router.patch("/admin/contacts/:id", async (req, res): Promise<void> => {
+router.patch("/admin/contacts/:id", async (req: Request, res: Response): Promise<void> => {
   const raw = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
   const params = UpdateContactStatusParams.safeParse({ id: parseInt(raw, 10) });
   if (!params.success) {
