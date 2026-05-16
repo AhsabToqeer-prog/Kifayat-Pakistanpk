@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-form"; // WRONG IMPORT INTENTIONAL FOR NOW, fixing immediately below
-import { useForm as useReactHookForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useSubmitContact } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
@@ -26,7 +25,7 @@ export default function Contact() {
   const { toast } = useToast();
   const submitContact = useSubmitContact();
 
-  const form = useReactHookForm<FormValues>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",

@@ -16,7 +16,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Users, Mail, CheckCircle2, Lock } from "lucide-react";
 import { format } from "date-fns";
 import { useQueryClient } from "@tanstack/react-query";
-import { ContactStatusUpdateStatus } from "@workspace/api-client-react/src/generated/api.schemas";
 
 export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -49,7 +48,7 @@ export default function Admin() {
     updateStatus.mutate(
       { 
         id, 
-        data: { status: newStatus as ContactStatusUpdateStatus } 
+        data: { status: newStatus as "new" | "read" | "replied" } 
       },
       {
         onSuccess: () => {
