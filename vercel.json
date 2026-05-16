@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm run build",
-  "outputDirectory": "artifacts/kifayat-pakistan/dist/public",
-  "installCommand": "pnpm install"
+  "buildCommand": "cd artifacts/kifayat-pakistan && npm install && npm run build",
+  "outputDirectory": "artifacts/kifayat-pakistan/dist",
+  "installCommand": "echo 'skipping root install'"
 }
