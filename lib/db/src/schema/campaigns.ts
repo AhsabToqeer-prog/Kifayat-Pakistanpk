@@ -1,6 +1,5 @@
 import { pgTable, text, serial, integer, date } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+
 
 export const campaignsTable = pgTable("campaigns", {
   id: serial("id").primaryKey(),
@@ -14,6 +13,5 @@ export const campaignsTable = pgTable("campaigns", {
   startDate: date("start_date"),
 });
 
-export const insertCampaignSchema = createInsertSchema(campaignsTable).omit({ id: true });
-export type InsertCampaign = z.infer<typeof insertCampaignSchema>;
+
 export type Campaign = typeof campaignsTable.$inferSelect;
