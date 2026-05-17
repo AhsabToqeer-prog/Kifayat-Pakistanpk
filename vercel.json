@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm --filter @workspace/kifayat-pakistan run build",
+  "buildCommand": "pnpm --filter @workspace/kifayat-pakistan run build && mv artifacts/kifayat-pakistan/dist/public dist",
   "outputDirectory": "dist",
   "installCommand": "pnpm install",
   "framework": null,
