@@ -27,6 +27,8 @@ import type {
   ContactStatusUpdate,
   HealthStatus,
   ListContactsParams,
+  ListResourcesParams,
+  Resource,
   Stats
 } from './api.schemas';
 
@@ -411,6 +413,90 @@ export function useGetStats<TData = Awaited<ReturnType<typeof getStats>>, TError
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetStatsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getListResourcesUrl = (params?: ListResourcesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/resources?${stringifiedParams}` : `/api/resources`
+}
+
+/**
+ * @summary List resources for small retailers
+ */
+export const listResources = async (params?: ListResourcesParams, options?: RequestInit): Promise<Resource[]> => {
+
+  return customFetch<Resource[]>(getListResourcesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListResourcesQueryKey = (params?: ListResourcesParams,) => {
+    return [
+    `/api/resources`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListResourcesQueryOptions = <TData = Awaited<ReturnType<typeof listResources>>, TError = ErrorType<unknown>>(params?: ListResourcesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listResources>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListResourcesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listResources>>> = ({ signal }) => listResources(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listResources>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListResourcesQueryResult = NonNullable<Awaited<ReturnType<typeof listResources>>>
+export type ListResourcesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List resources for small retailers
+ */
+
+export function useListResources<TData = Awaited<ReturnType<typeof listResources>>, TError = ErrorType<unknown>>(
+ params?: ListResourcesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listResources>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListResourcesQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

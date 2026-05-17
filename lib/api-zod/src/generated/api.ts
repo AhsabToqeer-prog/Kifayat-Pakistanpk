@@ -93,6 +93,25 @@ export const GetStatsResponse = zod.object({
 
 
 /**
+ * @summary List resources for small retailers
+ */
+export const ListResourcesQueryParams = zod.object({
+  "category": zod.enum(['shopkeepers', 'vendors', 'laborers', 'general']).optional()
+})
+
+export const ListResourcesResponseItem = zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "category": zod.enum(['shopkeepers', 'vendors', 'laborers', 'general']),
+  "resourceType": zod.enum(['guide', 'scheme', 'contact', 'legal', 'financial']),
+  "url": zod.string().nullish(),
+  "phoneNumber": zod.string().nullish()
+})
+export const ListResourcesResponse = zod.array(ListResourcesResponseItem)
+
+
+/**
  * @summary List all campaigns/programs
  */
 export const ListCampaignsResponseItem = zod.object({

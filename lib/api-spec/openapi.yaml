@@ -14,6 +14,8 @@ tags:
     description: Contact form submissions
   - name: campaigns
     description: Programs and campaigns
+  - name: resources
+    description: Resource guides for small retailers and laborers
 paths:
   /healthz:
     get:
@@ -99,6 +101,27 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Stats"
+  /resources:
+    get:
+      operationId: listResources
+      tags: [resources]
+      summary: List resources for small retailers
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [shopkeepers, vendors, laborers, general]
+      responses:
+        "200":
+          description: List of resources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Resource"
   /campaigns:
     get:
       operationId: listCampaigns
@@ -209,6 +232,31 @@ components:
         - totalContacts
         - newContacts
         - activeCampaigns
+    Resource:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum: [shopkeepers, vendors, laborers, general]
+        resourceType:
+          type: string
+          enum: [guide, scheme, contact, legal, financial]
+        url:
+          type: ["string", "null"]
+        phoneNumber:
+          type: ["string", "null"]
+      required:
+        - id
+        - title
+        - description
+        - category
+        - resourceType
     Campaign:
       type: object
       properties:

@@ -89,6 +89,39 @@ export interface Stats {
   activeCampaigns: number;
 }
 
+export type ResourceCategory = typeof ResourceCategory[keyof typeof ResourceCategory];
+
+
+export const ResourceCategory = {
+  shopkeepers: 'shopkeepers',
+  vendors: 'vendors',
+  laborers: 'laborers',
+  general: 'general',
+} as const;
+
+export type ResourceResourceType = typeof ResourceResourceType[keyof typeof ResourceResourceType];
+
+
+export const ResourceResourceType = {
+  guide: 'guide',
+  scheme: 'scheme',
+  contact: 'contact',
+  legal: 'legal',
+  financial: 'financial',
+} as const;
+
+export interface Resource {
+  id: number;
+  title: string;
+  description: string;
+  category: ResourceCategory;
+  resourceType: ResourceResourceType;
+  /** @nullable */
+  url?: string | null;
+  /** @nullable */
+  phoneNumber?: string | null;
+}
+
 export type CampaignStatus = typeof CampaignStatus[keyof typeof CampaignStatus];
 
 
@@ -124,5 +157,19 @@ export const ListContactsStatus = {
   new: 'new',
   read: 'read',
   replied: 'replied',
+} as const;
+
+export type ListResourcesParams = {
+category?: ListResourcesCategory;
+};
+
+export type ListResourcesCategory = typeof ListResourcesCategory[keyof typeof ListResourcesCategory];
+
+
+export const ListResourcesCategory = {
+  shopkeepers: 'shopkeepers',
+  vendors: 'vendors',
+  laborers: 'laborers',
+  general: 'general',
 } as const;
 
