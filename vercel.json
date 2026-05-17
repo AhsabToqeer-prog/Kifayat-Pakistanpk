@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm --filter @workspace/kifayat-pakistan run build",
-  "outputDirectory": "artifacts/kifayat-pakistan/dist/public",
+  "outputDirectory": "dist",
   "installCommand": "pnpm install",
   "framework": null,
   "rewrites": [
