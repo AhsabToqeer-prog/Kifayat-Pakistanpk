@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
-import { contactsTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { contactsTable, campaignsTable } from "@workspace/db";
+import { eq, count } from "drizzle-orm";
 import { SubmitContactBody, UpdateContactStatusBody } from "@workspace/api-zod";
 
 const router: IRouter = Router();
@@ -85,7 +85,11 @@ router.get("/stats", async (req, res) => {
     const all = await db.select().from(contactsTable);
     const totalContacts = all.length;
     const newContacts = all.filter((c) => c.status === "new").length;
-    res.json({ totalContacts, newContacts, activeCampaigns: 3 });
+    const [{ value: activeCampaigns }] = await db
+      .select({ value: count() })
+      .from(campaignsTable)
+      .where(eq(campaignsTable.status, "active"));
+    res.json({ totalContacts, newContacts, activeCampaigns });
   } catch (err) {
     req.log.error({ err }, "Error getting stats");
     res.status(500).json({ error: "Internal server error" });
